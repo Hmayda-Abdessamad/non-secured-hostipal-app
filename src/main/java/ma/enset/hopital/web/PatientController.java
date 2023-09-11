@@ -20,6 +20,7 @@ import java.util.List;
 @Controller
 @AllArgsConstructor
 public class PatientController {
+
     private PatientRepository patientRepository;
     @GetMapping("/user/index")
     public String index(Model model,
@@ -48,7 +49,7 @@ public class PatientController {
     }
     @GetMapping("/admin/formPatients")
     //method    pour securiser une methode
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String formPatient(Model model){
         model.addAttribute("patient",new Patient());
         return "formPatients";

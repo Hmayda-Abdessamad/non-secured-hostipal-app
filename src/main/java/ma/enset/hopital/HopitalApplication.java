@@ -1,5 +1,6 @@
 package ma.enset.hopital;
 
+import lombok.AllArgsConstructor;
 import ma.enset.hopital.entities.Patient;
 import ma.enset.hopital.repository.PatientRepository;
 import ma.enset.hopital.service.AccountService;
@@ -20,9 +21,10 @@ import java.awt.geom.PathIterator;
 import java.util.Date;
 
 @SpringBootApplication
+@AllArgsConstructor
 public class HopitalApplication implements CommandLineRunner {
 
-    @Autowired(required = true)
+
     private PatientRepository patientRepository;
 
 
@@ -65,7 +67,7 @@ public class HopitalApplication implements CommandLineRunner {
 //    }
 
 
-        @Bean
+        //@Bean
         CommandLineRunner commandLineRunnerUserDetails  (AccountService accountService){
 
             return args -> {

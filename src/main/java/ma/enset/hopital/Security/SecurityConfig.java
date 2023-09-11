@@ -29,14 +29,16 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder;
     private UserDetailsServiceImp userDetailsServiceImp;
 
+
+
     @Bean
      public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
         httpSecurity.formLogin().loginPage("/login").defaultSuccessUrl("/",true).permitAll();
         httpSecurity.rememberMe();
         httpSecurity.authorizeHttpRequests().requestMatchers("/webjars/**").permitAll();
-        httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER");
-        httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
+        httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasAuthority("USER");
+        httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasAuthority("ADMIN");
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
         httpSecurity.userDetailsService(userDetailsServiceImp);
