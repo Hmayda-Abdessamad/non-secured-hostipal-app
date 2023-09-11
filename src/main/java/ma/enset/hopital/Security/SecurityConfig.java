@@ -1,5 +1,7 @@
 package ma.enset.hopital.Security;
 
+import lombok.AllArgsConstructor;
+import ma.enset.hopital.service.UserDetailsServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,28 +22,15 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
 
-    @Bean
-    public JdbcUserDetailsManager  jdbcUserDetailsManager(DataSource dataSource){
-        return new JdbcUserDetailsManager(dataSource);
-    }
 
-    @Autowired
     public PasswordEncoder passwordEncoder;
-
-    //@Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
-        return new InMemoryUserDetailsManager(
-                User.withUsername("user1").password(passwordEncoder.encode("1234")).roles("USER").build(),
-                User.withUsername("user2").password(passwordEncoder.encode("1234")).roles("USER").build(),
-                User.withUsername("admin").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build()
-        );
-    }
-
+    private UserDetailsServiceImp userDetailsServiceImp;
 
     @Bean
-   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
         httpSecurity.formLogin().loginPage("/login").defaultSuccessUrl("/",true).permitAll();
         httpSecurity.rememberMe();
@@ -50,7 +39,26 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
+        httpSecurity.userDetailsService(userDetailsServiceImp);
     return httpSecurity.build();
    };
+
+
+
+
+    //    @Bean
+//    public JdbcUserDetailsManager  jdbcUserDetailsManager(DataSource dataSource){
+//        return new JdbcUserDetailsManager(dataSource);
+//    }
+
+
+    //    @Bean
+//    public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
+//        return new InMemoryUserDetailsManager(
+//                User.withUsername("user1").password(passwordEncoder.encode("1234")).roles("USER").build(),
+//                User.withUsername("user2").password(passwordEncoder.encode("1234")).roles("USER").build(),
+//                User.withUsername("admin").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build()
+//        );
+//    }
 
 }
